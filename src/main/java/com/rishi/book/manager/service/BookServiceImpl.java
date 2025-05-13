@@ -7,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-
-import static org.antlr.v4.runtime.tree.xpath.XPath.findAll;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -49,7 +46,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void deleteBook(int id) {
-        bookRepository.deleteById(id);
+        Book savedBook = bookRepository.findById(id)
+                .orElseThrow(() -> new BookNotFoundException("Book with id " + id + " not found"));
+
+        bookRepository.delete(savedBook);
     }
 
     @Override
